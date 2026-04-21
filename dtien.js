@@ -1,25 +1,29 @@
-// ff_mod.js
-// Script can thiệp vào fileinfo để thay đổi chỉ mục tài nguyên
+/*
+ * Script thay thế assetindexer cho Free Fire iOS 1.123.7
+ */
 
 let body = $response.body;
 
-// Thông số tệp tin bạn đã cung cấp
+// 1. Thông số tệp tin của bạn (Đã tính toán từ file bạn gửi)
 const myHash = "8YFMbyrJG+2B7Q4algt0UEHdsQiRw=";
 const mySize = "46096";
-// Thay link dưới đây bằng link RAW GitHub sau khi bạn upload tệp lên đó
-const myGithubLink = "https://raw.githubusercontent.com/user/repo/main/assetindexer";
+// Đường dẫn trực tiếp từ GitHub (Đã giải mã ký tự đặc biệt)
+const myGithubLink = "https://raw.githubusercontent.com/dtiendzai123/hack21/main/assetindexer.8YFMbyrJG+2B7Q4algt0UEHdsQiRw=";
 
-// Cấu trúc tìm kiếm dòng assetindexer trong fileinfo của Free Fire
+// 2. Cấu trúc tìm dòng assetindexer trong fileinfo
 let pattern = /avatar\/assetindexer,[^,]+,[^,]+,0,[^,]+,[^,]+,True,0/g;
 
 if (body) {
     if (body.includes("avatar/assetindexer")) {
-        // Thay thế thông số Hash và Size để game nhận diện file mới
+        // Thay thế mã định danh và dung lượng để game chấp nhận file mod
         body = body.replace(pattern, `avatar/assetindexer,${myHash},${mySize},0,${myHash},${mySize},True,0`);
         
-        // Lái hướng tải về link cá nhân của bạn
+        // Chuyển hướng link tải về GitHub
         body = body.replace(/https:\/\/dl\.gmc\.freefiremobile\.com\/.*\/assetindexer/g, myGithubLink);
+        
+        console.log("FF_MOD: Đã thay thế assetindexer thành công!");
     }
+    $done({ body });
+} else {
+    $done({});
 }
-
-$done({ body });
